@@ -55,6 +55,9 @@ export function getMembers(): Member[] {
 export function saveMembers(members: Member[]): void {
   try {
     localStorage.setItem(STORAGE_KEYS.MEMBERS, JSON.stringify(members));
+    if (typeof window !== 'undefined') {
+      window.dispatchEvent(new CustomEvent('community_members_updated'));
+    }
   } catch (err) {
     console.error('Failed to save members', err);
   }

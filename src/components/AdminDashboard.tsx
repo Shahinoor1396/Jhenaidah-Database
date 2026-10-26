@@ -37,6 +37,7 @@ interface Props {
   onDeleteNotice: (id: string) => void;
   onResetData: () => void;
   onExitAdmin: () => void;
+  onRefreshData?: () => void;
 }
 
 export const AdminDashboard: React.FC<Props> = ({
@@ -50,9 +51,15 @@ export const AdminDashboard: React.FC<Props> = ({
   onDeleteNotice,
   onResetData,
   onExitAdmin,
+  onRefreshData,
 }) => {
   const [activeTab, setActiveTab] = useState<'overview' | 'approvals' | 'members' | 'backup' | 'broadcast'>('overview');
   const [searchQuery, setSearchQuery] = useState('');
+
+  // Automatically refresh latest members from storage whenever activeTab changes
+  React.useEffect(() => {
+    onRefreshData?.();
+  }, [activeTab]);
   const [editingMember, setEditingMember] = useState<Member | null>(null);
   const [showAddMemberModal, setShowAddMemberModal] = useState(false);
   const [broadcastTemplate, setBroadcastTemplate] = useState<'blood' | 'picnic' | 'meeting'>('picnic');
@@ -319,7 +326,7 @@ export const AdminDashboard: React.FC<Props> = ({
       {/* Tab 2: Pending Approvals */}
       {activeTab === 'approvals' && (
         <div className="space-y-4">
-          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2">
+          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
             <div>
               <h3 className="font-bold text-slate-900 text-sm flex items-center gap-2">
                 <span>নতুন আবেদন যাচাই ও অনুমোদন তালিকা</span>
@@ -331,6 +338,20 @@ export const AdminDashboard: React.FC<Props> = ({
                 নতুন নিবন্ধিত সদস্যদের ডাটা যাচাই করুন। 'অনুমোদন করুন' বাটনে চাপলে সদস্য ডিরেক্টরি এবং রক্তদাতা তালিকায় তাৎক্ষণিক শো হবে।
               </p>
             </div>
+
+            <button
+              type="button"
+              onClick={() => {
+                onRefreshData?.();
+                setActionFeedback('সদস্য ডাটা রিফ্রেশ করা হয়েছে।');
+                setTimeout(() => setActionFeedback(null), 2500);
+              }}
+              className="flex items-center gap-1.5 px-3 py-1.5 text-xs font-semibold text-emerald-800 bg-emerald-50 hover:bg-emerald-100 border border-emerald-200 rounded-xl transition-colors cursor-pointer self-start sm:self-auto shrink-0"
+              title="সর্বশেষ আবেদন রিফ্রেশ করুন"
+            >
+              <RotateCcw className="w-3.5 h-3.5" />
+              <span>রিফ্রেশ করুন</span>
+            </button>
           </div>
 
           {/* Action Success / Reject Banner */}
@@ -345,17 +366,53 @@ export const AdminDashboard: React.FC<Props> = ({
           <div className="p-3.5 bg-blue-50/80 border border-blue-200/80 text-blue-900 rounded-2xl text-xs flex items-start gap-2.5">
             <Clock className="w-4 h-4 text-blue-600 shrink-0 mt-0.5" />
             <div className="space-y-0.5 text-[11px] leading-relaxed">
-              <strong className="text-blue-950">যাচাইকরণ প্রক্রিয়া:</strong> ওয়েবসাইটে নতুন কোনো সদস্য একাউন্ট তৈরি ও তথ্য আপলোড করলে নিরাপত্তার স্বার্থে সরাসরি ডিরেক্টরিতে প্রকাশিত হয় না। এডমিন কর্তৃক এখানে 'অনুমোদন' নিশ্চিত করার পরই তাদের প্রোফাইল ও রক্তদাতার তথ্য ওয়েবসাইটে সকলের জন্য উন্মুক্ত হয়।
+              <strong className="text-blue-950">যাচাইকরণ প্রক্রিয়া:</strong> ওয়েবসাইটে নতুন কোনো সদস্য মোবাইল বা মেইল দিয়ে একাউন্ট তৈরি ও তথ্য জমা দিলে তা স্বয়ংক্রিয়ভাবে এখানে <strong>পেন্ডিং আবেদন</strong> হিসেবে জমা হয়। এডমিন কর্তৃক 'অনুমোদন করুন' বাটনে ক্লিক করার পরই তা মূল ডিরেক্টরি ও রক্তদাতা তালিকায় সবার জন্য উন্মুক্ত হবে।
             </div>
           </div>
 
           {pendingMembers.length === 0 ? (
-            <div className="text-center py-12 bg-white rounded-2xl border border-slate-200 p-6 space-y-2">
-              <CheckCircle className="w-10 h-10 text-emerald-500 mx-auto" />
-              <h4 className="font-bold text-slate-900 text-sm">বর্তমানে কোনো নতুন অপেক্ষমাণ আবেদন নেই!</h4>
-              <p className="text-xs text-slate-500">
-                সকল সদস্যপদ ইতিমধ্যে যাচাই ও অনুমোদিত হয়ে মূল ডিরেক্টরিতে যুক্ত রয়েছে।
-              </p>
+            <div className="text-center py-10 bg-white rounded-2xl border border-slate-200 p-6 space-y-3 max-w-lg mx-auto">
+              <div className="w-12 h-12 rounded-full bg-emerald-50 text-emerald-600 flex items-center justify-center mx-auto shadow-inner">
+                <CheckCircle className="w-6 h-6" />
+              </div>
+              <div className="space-y-1">
+                <h4 className="font-bold text-slate-900 text-sm">বর্তমানে কোনো নতুন অপেক্ষমাণ আবেদন নেই!</h4>
+                <p className="text-xs text-slate-500 leading-relaxed">
+                  সকল সদস্যপদ ইতিমধ্যে যাচাই ও অনুমোদিত হয়ে মূল ডিরেক্টরিতে যুক্ত রয়েছে। নতুন কেউ মোবাইল নম্বর বা জিমেইল দিয়ে একাউন্ট করলে সাথে সাথে এখানে পেন্ডিং হিসেবে শো করবে।
+                </p>
+              </div>
+
+              <div className="pt-2">
+                <button
+                  type="button"
+                  onClick={() => {
+                    const testPhone = '017' + Math.floor(10000000 + Math.random() * 90000000);
+                    onAddMember({
+                      fullName: 'মো: তানভীর আহমেদ',
+                      phone: testPhone,
+                      email: 'tanveer.jhd@example.com',
+                      bloodGroup: 'B+',
+                      isBloodDonor: true,
+                      upazila: 'শৈলকুপা',
+                      unionOrVillage: 'ধলহরাচন্দ্র, শৈলকুপা',
+                      dhakaArea: 'উত্তরা',
+                      dhakaAddress: 'সেক্টর # ৩, উত্তরা, ঢাকা',
+                      occupationCategory: 'প্রকৌশলী',
+                      professionDetails: 'সফটওয়্যার ইঞ্জিনিয়ার, ঢাকা',
+                      status: 'pending',
+                      note: 'ওয়েবসাইট থেকে নতুন একাউন্ট সাবমিট করেছেন (যাচাই অপেক্ষমাণ)',
+                      emergencyContact: testPhone,
+                    });
+                    onRefreshData?.();
+                    setActionFeedback('একটি নতুন পেন্ডিং আবেদন জমা হয়েছে! নিচে "অনুমোদন করুন" বোতাম চেপে এখনই পরীক্ষা করুন।');
+                    setTimeout(() => setActionFeedback(null), 5000);
+                  }}
+                  className="inline-flex items-center gap-1.5 px-4 py-2 bg-gradient-to-r from-emerald-600 to-teal-600 hover:from-emerald-700 hover:to-teal-700 text-white text-xs font-semibold rounded-xl shadow-xs transition-all cursor-pointer"
+                >
+                  <Plus className="w-3.5 h-3.5" />
+                  <span>🧪 একটি টেস্ট পেন্ডিং আবেদন জমা দিয়ে পরীক্ষা করুন</span>
+                </button>
+              </div>
             </div>
           ) : (
             <div className="space-y-3">

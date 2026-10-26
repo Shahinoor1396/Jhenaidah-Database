@@ -23,6 +23,8 @@ import {
 interface Props {
   onSuccess: (user: Member) => void;
   onClose: () => void;
+  onMemberAdded?: (user: Member) => void;
+  initialIsSignUp?: boolean;
 }
 
 const BLOOD_GROUPS: BloodGroup[] = ['A+', 'A-', 'B+', 'B-', 'AB+', 'AB-', 'O+', 'O-'];
@@ -40,9 +42,14 @@ const PROFESSIONS: ProfessionCategory[] = [
   'অন্যান্য',
 ];
 
-export const UserAuthModal: React.FC<Props> = ({ onSuccess, onClose }) => {
+export const UserAuthModal: React.FC<Props> = ({
+  onSuccess,
+  onClose,
+  onMemberAdded,
+  initialIsSignUp = false,
+}) => {
   const [authMethod, setAuthMethod] = useState<'email' | 'phone'>('email');
-  const [isSignUp, setIsSignUp] = useState(false);
+  const [isSignUp, setIsSignUp] = useState(initialIsSignUp);
 
   // Form Fields
   const [fullName, setFullName] = useState('');
@@ -139,6 +146,7 @@ export const UserAuthModal: React.FC<Props> = ({ onSuccess, onClose }) => {
         });
         setCurrentUser(newMember);
         setSignupSuccessMember(newMember);
+        onMemberAdded?.(newMember);
       } else {
         // Phone Sign Up
         const exists = members.find((m) => m.phone === phone.trim());
@@ -167,6 +175,7 @@ export const UserAuthModal: React.FC<Props> = ({ onSuccess, onClose }) => {
         });
         setCurrentUser(newMember);
         setSignupSuccessMember(newMember);
+        onMemberAdded?.(newMember);
       }
     } else {
       // Login Flow
@@ -267,13 +276,22 @@ export const UserAuthModal: React.FC<Props> = ({ onSuccess, onClose }) => {
               </div>
             </div>
 
-            <button
-              onClick={() => onSuccess(signupSuccessMember)}
-              className="w-full py-2.5 bg-emerald-700 hover:bg-emerald-800 text-white font-semibold rounded-xl shadow-md transition-all cursor-pointer flex items-center justify-center gap-2 text-xs"
-            >
-              <span>আমার প্রোফাইলে যান ও ছবি/তথ্য হালনাগাদ করুন</span>
-              <ArrowRight className="w-4 h-4" />
-            </button>
+            <div className="space-y-2 pt-1">
+              <button
+                onClick={() => onSuccess(signupSuccessMember)}
+                className="w-full py-2.5 bg-emerald-700 hover:bg-emerald-800 text-white font-semibold rounded-xl shadow-md transition-all cursor-pointer flex items-center justify-center gap-2 text-xs"
+              >
+                <span>আমার প্রোফাইলে যান ও ছবি/তথ্য হালনাগাদ করুন</span>
+                <ArrowRight className="w-4 h-4" />
+              </button>
+              <button
+                type="button"
+                onClick={onClose}
+                className="w-full py-2 text-xs font-semibold text-slate-600 hover:text-slate-900 bg-slate-100 hover:bg-slate-200 rounded-xl transition-colors cursor-pointer"
+              >
+                ঠিক আছে, আবেদন জমা হয়েছে (বন্ধ করুন)
+              </button>
+            </div>
           </div>
         ) : (
           <>

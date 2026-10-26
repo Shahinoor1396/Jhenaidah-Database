@@ -49,18 +49,32 @@ export default function App() {
   // Modals
   const [showAdminLoginModal, setShowAdminLoginModal] = useState(false);
   const [showUserAuthModal, setShowUserAuthModal] = useState(false);
+  const [userAuthInitialSignUp, setUserAuthInitialSignUp] = useState(false);
   const [showRegistrationModal, setShowRegistrationModal] = useState(false);
   const [selectedMember, setSelectedMember] = useState<Member | null>(null);
   const [idCardMember, setIdCardMember] = useState<Member | null>(null);
   const [selectedLocation, setSelectedLocation] = useState<'dhaka' | 'jhenaidah'>('dhaka');
   const [showPrayerModal, setShowPrayerModal] = useState(false);
 
-  // Initialize data from LocalStorage
+  // Initialize data from LocalStorage and listen for any additions/updates in real-time
   useEffect(() => {
-    setMembers(getMembers());
-    setNotices(getNotices());
-    setPosts(getPosts());
-    setCurrentUser(getCurrentUser());
+    const syncData = () => {
+      setMembers(getMembers());
+      setNotices(getNotices());
+      setPosts(getPosts());
+      setCurrentUser(getCurrentUser());
+    };
+
+    syncData();
+
+    // Listen for custom member changes and cross-tab storage changes
+    window.addEventListener('community_members_updated', syncData);
+    window.addEventListener('storage', syncData);
+
+    return () => {
+      window.removeEventListener('community_members_updated', syncData);
+      window.removeEventListener('storage', syncData);
+    };
   }, []);
 
   // Handlers
@@ -125,9 +139,14 @@ export default function App() {
 
   const handleToggleAdminView = () => {
     if (!isAdminLoggedIn) {
+      setMembers(getMembers());
       setShowAdminLoginModal(true);
     } else {
-      setIsAdminView(!isAdminView);
+      const nextView = !isAdminView;
+      setIsAdminView(nextView);
+      if (nextView) {
+        setMembers(getMembers());
+      }
     }
   };
 
@@ -178,12 +197,21 @@ export default function App() {
         activeSection={activeSection}
         onSelectSection={setActiveSection}
         currentUser={currentUser}
-        onOpenUserAuth={() => setShowUserAuthModal(true)}
+        onOpenUserAuth={() => {
+          setUserAuthInitialSignUp(false);
+          setShowUserAuthModal(true);
+        }}
         isAdminLoggedIn={isAdminLoggedIn}
         isAdminView={isAdminView}
-        onOpenAdminLogin={() => setShowAdminLoginModal(true)}
+        onOpenAdminLogin={() => {
+          setMembers(getMembers());
+          setShowAdminLoginModal(true);
+        }}
         onToggleAdminView={handleToggleAdminView}
-        onOpenRegistration={() => setShowRegistrationModal(true)}
+        onOpenRegistration={() => {
+          setUserAuthInitialSignUp(true);
+          setShowUserAuthModal(true);
+        }}
         onOpenPrayerTimes={() => setShowPrayerModal(true)}
       />
 
@@ -201,6 +229,7 @@ export default function App() {
             onDeleteNotice={handleDeleteNotice}
             onResetData={handleResetData}
             onExitAdmin={() => setIsAdminView(false)}
+            onRefreshData={() => setMembers(getMembers())}
           />
         ) : (
           <div>
@@ -214,6 +243,7 @@ export default function App() {
                   if (currentUser) {
                     setActiveSection('profile');
                   } else {
+                    setUserAuthInitialSignUp(true);
                     setShowUserAuthModal(true);
                   }
                 }}
@@ -299,14 +329,22 @@ export default function App() {
       {/* Modals */}
       {showUserAuthModal && (
         <UserAuthModal
+          initialIsSignUp={userAuthInitialSignUp}
           onSuccess={handleUserLogin}
-          onClose={() => setShowUserAuthModal(false)}
+          onMemberAdded={() => {
+            setMembers(getMembers());
+          }}
+          onClose={() => {
+            setShowUserAuthModal(false);
+            setMembers(getMembers());
+          }}
         />
       )}
 
       {showAdminLoginModal && (
         <AdminLoginModal
           onSuccess={() => {
+            setMembers(getMembers());
             setIsAdminLoggedIn(true);
             setIsAdminView(true);
             setShowAdminLoginModal(false);
