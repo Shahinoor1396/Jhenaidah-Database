@@ -201,15 +201,6 @@ export const UserAuthModal: React.FC<Props> = ({ onSuccess, onClose }) => {
     }
   };
 
-  // Quick Demo Login helper
-  const handleQuickDemo = (index: number) => {
-    const members = getMembers();
-    if (members[index]) {
-      setCurrentUser(members[index]);
-      onSuccess(members[index]);
-    }
-  };
-
   return (
     <div className="fixed inset-0 z-50 bg-slate-900/60 backdrop-blur-sm flex items-center justify-center p-4 overflow-y-auto">
       <div className="bg-white rounded-3xl max-w-lg w-full p-6 sm:p-7 shadow-2xl border border-slate-200 my-8 max-h-[92vh] overflow-y-auto">
@@ -645,29 +636,6 @@ export const UserAuthModal: React.FC<Props> = ({ onSuccess, onClose }) => {
                 </p>
               )}
             </div>
-
-            {/* Instant Demo Login Buttons */}
-            {!isSignUp && (
-              <div className="mt-4 pt-3 border-t border-slate-100 space-y-2">
-                <p className="text-[11px] text-slate-400 text-center">দ্রুত টেস্ট করতে ডেমো সদস্য হিসেবে লগইন করুন:</p>
-                <div className="grid grid-cols-2 gap-2">
-                  <button
-                    type="button"
-                    onClick={() => handleQuickDemo(0)}
-                    className="py-1.5 px-2 bg-slate-50 hover:bg-emerald-50 text-slate-700 hover:text-emerald-800 border border-slate-200 rounded-lg text-[11px] font-medium transition-colors cursor-pointer truncate"
-                  >
-                    👤 রফিকুল ইসলাম (সদর)
-                  </button>
-                  <button
-                    type="button"
-                    onClick={() => handleQuickDemo(1)}
-                    className="py-1.5 px-2 bg-slate-50 hover:bg-emerald-50 text-slate-700 hover:text-emerald-800 border border-slate-200 rounded-lg text-[11px] font-medium transition-colors cursor-pointer truncate"
-                  >
-                    👩‍⚕️ ডা. সানজিদা (কালীগঞ্জ)
-                  </button>
-                </div>
-              </div>
-            )}
           </>
         )}
       </div>

@@ -1,6 +1,6 @@
 import React from 'react';
 import { Member } from '../types';
-import { Shield, Sparkles, UserPlus, LogIn, Heart, User, Compass } from 'lucide-react';
+import { Shield, UserPlus, LogIn, Heart, User, Compass } from 'lucide-react';
 
 interface Props {
   activeSection: string;
@@ -12,7 +12,6 @@ interface Props {
   onOpenAdminLogin: () => void;
   onToggleAdminView: () => void;
   onOpenRegistration: () => void;
-  onOpenArchitectureGuide: () => void;
   onOpenPrayerTimes: () => void;
 }
 
@@ -26,7 +25,6 @@ export const Navbar: React.FC<Props> = ({
   onOpenAdminLogin,
   onToggleAdminView,
   onOpenRegistration,
-  onOpenArchitectureGuide,
   onOpenPrayerTimes,
 }) => {
   return (
@@ -138,15 +136,6 @@ export const Navbar: React.FC<Props> = ({
 
         {/* Zone 3: 1 primary action cluster */}
         <div className="flex items-center gap-2 shrink-0">
-          <button
-            onClick={onOpenArchitectureGuide}
-            className="hidden xl:flex items-center gap-1 px-2.5 py-1.5 text-xs font-semibold text-emerald-800 bg-emerald-50 hover:bg-emerald-100 border border-emerald-200 rounded-lg transition-colors cursor-pointer whitespace-nowrap shrink-0"
-            title="অ্যাপটির বিস্তারিত টেকনিক্যাল আইডিয়া ও কাঠামো দেখুন"
-          >
-            <Sparkles className="w-3.5 h-3.5 text-emerald-600" />
-            <span>আর্কিটেকচার</span>
-          </button>
-
           {!isAdminView ? (
             <>
               {/* User Account / Profile Button */}

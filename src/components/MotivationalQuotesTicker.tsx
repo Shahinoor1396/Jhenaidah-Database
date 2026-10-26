@@ -121,24 +121,24 @@ export const MotivationalQuotesTicker: React.FC = () => {
     <div
       onMouseEnter={() => setIsPaused(true)}
       onMouseLeave={() => setIsPaused(false)}
-      className="flex items-center gap-2 max-w-xl mx-auto px-3 py-1.5 rounded-full bg-emerald-50/80 hover:bg-emerald-100/80 border border-emerald-200/70 transition-all text-xs text-slate-700 shadow-xs"
+      className="flex items-center gap-2 w-full mx-auto px-3 py-1.5 rounded-full bg-emerald-50/90 hover:bg-emerald-100/90 border border-emerald-200/80 transition-all text-xs text-slate-700 shadow-2xs"
       title="মনীষীদের অনুপ্রেরণামূলক উক্তি (প্রতি ১২ সেকেন্ড পর পরিবর্তনশীল)"
     >
-      <div className="flex items-center gap-1 shrink-0 text-emerald-700">
+      <div className="flex items-center gap-1.5 shrink-0 text-emerald-700">
         <Quote className="w-3.5 h-3.5 fill-emerald-600/30 text-emerald-700 shrink-0" />
-        <span className="text-[10px] font-bold text-emerald-800 bg-emerald-200/70 px-1.5 py-0.5 rounded-md hidden md:inline">
+        <span className="text-[10px] font-bold text-emerald-800 bg-emerald-200/70 px-1.5 py-0.5 rounded-md hidden sm:inline">
           অনুপ্রেরণা
         </span>
       </div>
 
       <div
-        className={`flex-1 min-w-0 transition-opacity duration-300 overflow-hidden truncate whitespace-nowrap text-center sm:text-left ${
-          isFading ? 'opacity-0 translate-y-1' : 'opacity-100 translate-y-0'
+        className={`flex-1 min-w-0 transition-opacity duration-300 flex items-center justify-center sm:justify-start flex-wrap sm:flex-nowrap gap-1.5 text-center sm:text-left ${
+          isFading ? 'opacity-0 translate-y-0.5' : 'opacity-100 translate-y-0'
         }`}
         title={`"${current.quote}" — ${current.author}`}
       >
-        <span className="italic font-medium text-slate-800 truncate">“{current.quote}”</span>
-        <span className="text-emerald-800 font-semibold ml-2 text-[11px] shrink-0 whitespace-nowrap">
+        <span className="italic font-medium text-slate-800">“{current.quote}”</span>
+        <span className="text-emerald-800 font-bold text-[11px] shrink-0 whitespace-nowrap">
           — {current.author}
         </span>
       </div>

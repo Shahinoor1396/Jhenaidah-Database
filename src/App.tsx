@@ -27,7 +27,6 @@ import { AdminLoginModal } from './components/AdminLoginModal';
 import { RegistrationModal } from './components/RegistrationModal';
 import { MemberDetailsModal } from './components/MemberDetailsModal';
 import { HeritageAndDignitaries } from './components/HeritageAndDignitaries';
-import { ArchitectureGuideModal } from './components/ArchitectureGuideModal';
 import { UserAuthModal } from './components/UserAuthModal';
 import { UserProfileManager } from './components/UserProfileManager';
 import { MobileBottomNav } from './components/MobileBottomNav';
@@ -51,7 +50,6 @@ export default function App() {
   const [showAdminLoginModal, setShowAdminLoginModal] = useState(false);
   const [showUserAuthModal, setShowUserAuthModal] = useState(false);
   const [showRegistrationModal, setShowRegistrationModal] = useState(false);
-  const [showArchitectureGuideModal, setShowArchitectureGuideModal] = useState(false);
   const [selectedMember, setSelectedMember] = useState<Member | null>(null);
   const [idCardMember, setIdCardMember] = useState<Member | null>(null);
   const [selectedLocation, setSelectedLocation] = useState<'dhaka' | 'jhenaidah'>('dhaka');
@@ -186,7 +184,6 @@ export default function App() {
         onOpenAdminLogin={() => setShowAdminLoginModal(true)}
         onToggleAdminView={handleToggleAdminView}
         onOpenRegistration={() => setShowRegistrationModal(true)}
-        onOpenArchitectureGuide={() => setShowArchitectureGuideModal(true)}
         onOpenPrayerTimes={() => setShowPrayerModal(true)}
       />
 
@@ -286,8 +283,8 @@ export default function App() {
             <span className="font-semibold text-slate-800 whitespace-nowrap">ঢাকাস্থ ঝিনাইদহ জেলার মানুষ</span>
           </div>
 
-          {/* Middle: Motivational Quotes Ticker (Single line, 10-15s change) */}
-          <div className="w-full md:flex-1 mx-2 sm:mx-6 min-w-0 max-w-2xl">
+          {/* Middle: Motivational Quotes Ticker (Single line, 10-15s change, fully visible) */}
+          <div className="w-full md:flex-1 mx-2 sm:mx-4 min-w-0">
             <MotivationalQuotesTicker />
           </div>
 
@@ -347,10 +344,6 @@ export default function App() {
           onUpdateMember={handleUpdateMember}
           onClose={() => setIdCardMember(null)}
         />
-      )}
-
-      {showArchitectureGuideModal && (
-        <ArchitectureGuideModal onClose={() => setShowArchitectureGuideModal(false)} />
       )}
 
       {/* 5 Daily Prayer Times Modal */}
