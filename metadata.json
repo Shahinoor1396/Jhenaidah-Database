@@ -1,0 +1,6 @@
+{
+  "name": "ঢাকাস্থ ঝিনাইদহ জেলার মানুষ",
+  "description": "ঢাকায় বসবাসরত ঝিনাইদহ জেলার বাসিন্দাদের ডিজিটাল মেম্বার ডিরেক্টরি, রক্তদাতা সন্ধান, জরুরি সেবা ও এডমিন ম্যানেজমেন্ট প্ল্যাটফর্ম।",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}

@@ -1,0 +1,59 @@
+@import "tailwindcss";
+
+@layer base {
+  body {
+    font-family: 'Hind Siliguri', 'Plus Jakarta Sans', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+    background-color: #fbfdff;
+    color: #0f172a;
+    -webkit-tap-highlight-color: transparent;
+    background-image: 
+      radial-gradient(circle at 12% 14%, rgba(20, 184, 166, 0.16) 0%, transparent 45%),
+      radial-gradient(circle at 88% 12%, rgba(37, 99, 235, 0.18) 0%, transparent 45%),
+      radial-gradient(circle at 50% 48%, rgba(56, 189, 248, 0.12) 0%, transparent 55%),
+      radial-gradient(circle at 10% 88%, rgba(37, 99, 235, 0.15) 0%, transparent 50%),
+      radial-gradient(circle at 90% 90%, rgba(13, 148, 136, 0.17) 0%, transparent 50%),
+      radial-gradient(circle at 50% 10%, rgba(255, 255, 255, 0.8) 0%, transparent 60%),
+      url('/assets/website-mesh-background.svg');
+    background-attachment: fixed;
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    min-height: 100vh;
+  }
+}
+
+@media print {
+  .no-print {
+    display: none !important;
+  }
+  .print-only {
+    display: block !important;
+  }
+}
+
+@keyframes monumentFloat {
+  0%, 100% {
+    transform: translateY(0px);
+  }
+  50% {
+    transform: translateY(-8px);
+  }
+}
+
+@keyframes glowPulse {
+  0%, 100% {
+    box-shadow: 0 0 15px rgba(16, 185, 129, 0.35), 0 0 30px rgba(5, 150, 105, 0.2);
+  }
+  50% {
+    box-shadow: 0 0 28px rgba(16, 185, 129, 0.6), 0 0 45px rgba(245, 158, 11, 0.35);
+  }
+}
+
+.animate-monument {
+  animation: monumentFloat 4s ease-in-out infinite;
+}
+
+.animate-glow-ring {
+  animation: glowPulse 3s ease-in-out infinite;
+}
+
