@@ -71,7 +71,6 @@ export const UserDirectory: React.FC<Props> = ({
         const q = searchQuery.toLowerCase();
         return (
           m.fullName.toLowerCase().includes(q) ||
-          m.phone.includes(q) ||
           m.dhakaArea.toLowerCase().includes(q) ||
           m.upazila.toLowerCase().includes(q) ||
           m.unionOrVillage.toLowerCase().includes(q) ||
@@ -257,7 +256,7 @@ export const UserDirectory: React.FC<Props> = ({
           <div className="md:col-span-4 relative">
             <input
               type="text"
-              placeholder="নাম, ফোন, গ্রাম, বা পদবী দিয়ে খুঁজুন..."
+              placeholder="নাম, গ্রাম, বা পদবী দিয়ে খুঁজুন..."
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
               className="w-full pl-9 pr-3 py-2 text-xs border border-slate-200 rounded-xl focus:outline-none focus:border-emerald-600 focus:ring-1 focus:ring-emerald-600"

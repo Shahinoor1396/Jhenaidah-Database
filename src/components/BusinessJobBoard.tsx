@@ -24,8 +24,8 @@ export const BusinessJobBoard: React.FC<Props> = ({ posts, onAddPost }) => {
 
   const filteredPosts = posts.filter((p) => (activeTab === 'all' ? true : p.type === activeTab));
 
-  const handleCall = (phone: string) => {
-    window.location.href = `tel:${phone}`;
+  const handleCall = (_phone: string) => {
+    // Direct call redirect disabled on public site
   };
 
   const handleCreate = (e: React.FormEvent) => {
@@ -142,7 +142,7 @@ export const BusinessJobBoard: React.FC<Props> = ({ posts, onAddPost }) => {
             </div>
 
             <div className="mt-4 pt-3 border-t border-slate-100 flex items-center justify-between">
-              <span className="text-xs font-mono text-slate-600">{post.phone}</span>
+              <span className="text-xs text-slate-500">নম্বর গোপন</span>
               <button
                 onClick={() => handleCall(post.phone)}
                 className="flex items-center gap-1.5 px-3 py-1.5 text-xs font-semibold text-white bg-slate-900 hover:bg-emerald-700 rounded-lg transition-colors cursor-pointer"

@@ -11,34 +11,17 @@ interface Props {
 export const MemberCard: React.FC<Props> = ({ member, onSelect, onViewIdCard }) => {
   const handleCall = (e: React.MouseEvent) => {
     e.stopPropagation();
-    window.location.href = `tel:${member.phone}`;
+    // Direct call link disabled on public site
   };
 
   const handleWhatsApp = (e: React.MouseEvent) => {
     e.stopPropagation();
-    const cleanNumber = member.phone.replace(/[^0-9]/g, '');
-    const intlNumber = cleanNumber.startsWith('0') ? '88' + cleanNumber : cleanNumber;
-    const msg = encodeURIComponent(
-      `আসসালামু আলাইকুম ${member.fullName} ভাই/আপু, আমি "ঢাকাস্থ ঝিনাইদহ জেলার মানুষ" গ্রুপ থেকে যোগাযোগ করছি।`
-    );
-    window.open(`https://wa.me/${intlNumber}?text=${msg}`, '_blank');
+    // Direct WhatsApp redirect disabled on public site
   };
 
   const handleFacebook = (e: React.MouseEvent) => {
     e.stopPropagation();
-    if (!member.facebookProfile) {
-      onSelect(member);
-      return;
-    }
-    let url = member.facebookProfile.trim();
-    if (!url.startsWith('http://') && !url.startsWith('https://')) {
-      if (url.startsWith('facebook.com/') || url.startsWith('www.facebook.com/')) {
-        url = 'https://' + url;
-      } else {
-        url = `https://facebook.com/${url.replace('@', '')}`;
-      }
-    }
-    window.open(url, '_blank');
+    // Direct Facebook redirect disabled on public site
   };
 
   return (

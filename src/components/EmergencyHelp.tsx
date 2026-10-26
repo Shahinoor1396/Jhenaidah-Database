@@ -3,8 +3,8 @@ import { EMERGENCY_CONTACTS } from '../data/mockData';
 import { Phone, Shield, HeartPulse, GraduationCap, Users } from 'lucide-react';
 
 export const EmergencyHelp: React.FC = () => {
-  const handleCall = (phone: string) => {
-    window.location.href = `tel:${phone}`;
+  const handleCall = (_phone: string) => {
+    // Direct call redirect disabled on public site
   };
 
   const categories = [

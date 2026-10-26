@@ -28,7 +28,6 @@ export const BloodDonorFinder: React.FC<Props> = ({ members, onSelectMember }) =
         const query = searchQuery.toLowerCase();
         return (
           m.fullName.toLowerCase().includes(query) ||
-          m.phone.includes(query) ||
           m.dhakaArea.toLowerCase().includes(query) ||
           m.upazila.toLowerCase().includes(query)
         );
@@ -37,17 +36,12 @@ export const BloodDonorFinder: React.FC<Props> = ({ members, onSelectMember }) =
     });
   }, [members, selectedGroup, selectedArea, selectedUpazila, searchQuery]);
 
-  const handleCall = (phone: string) => {
-    window.location.href = `tel:${phone}`;
+  const handleCall = (_phone: string) => {
+    // Direct call redirect disabled on public site
   };
 
-  const handleWhatsApp = (member: Member) => {
-    const cleanNumber = member.phone.replace(/[^0-9]/g, '');
-    const intlNumber = cleanNumber.startsWith('0') ? '88' + cleanNumber : cleanNumber;
-    const msg = encodeURIComponent(
-      `জরুরি রক্তের প্রয়োজন!\nআসসালামু আলাইকুম ${member.fullName} ভাই/আপু, "ঢাকাস্থ ঝিনাইদহ জেলার মানুষ" প্ল্যাটফর্ম থেকে আপনার সাথে যোগাযোগ করছি। ঢাকা শহরের হাসপাতালে জরুরি ${member.bloodGroup} রক্তের প্রয়োজন। আপনি কি রক্তদানে সহায়তা করতে পারবেন?`
-    );
-    window.open(`https://wa.me/${intlNumber}?text=${msg}`, '_blank');
+  const handleWhatsApp = (_member: Member) => {
+    // Direct WhatsApp redirect disabled on public site
   };
 
   return (
@@ -150,12 +144,12 @@ export const BloodDonorFinder: React.FC<Props> = ({ members, onSelectMember }) =
 
         <div>
           <label className="block text-xs font-medium text-slate-700 mb-1">
-            রক্তদাতার নাম বা মোবাইল খুঁজুন
+            রক্তদাতার নাম বা এলাকা খুঁজুন
           </label>
           <div className="relative">
             <input
               type="text"
-              placeholder="নাম বা মোবাইল নম্বর..."
+              placeholder="নাম বা এলাকা..."
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
               className="w-full pl-8 pr-3 py-2 text-xs border border-slate-200 rounded-lg focus:outline-none focus:border-rose-600 focus:ring-1 focus:ring-rose-600"

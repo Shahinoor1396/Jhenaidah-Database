@@ -56,39 +56,35 @@ export const MemberDetailsModal: React.FC<Props> = ({
   );
   const canEditPhoto = isOwner || Boolean(isAdminLoggedIn);
 
+  // Hide phone numbers on public site (only visible to admin or profile owner)
+  const canViewPhone = isOwner || Boolean(isAdminLoggedIn);
+
+  const formatPublicEmergencyContact = (contact: string) => {
+    if (canViewPhone) return contact;
+    // Remove Bangladeshi mobile numbers or any 6+ digit phone sequences from public display
+    const withoutPhone = contact
+      .replace(/\s*[-–—:]?\s*(?:\+?88)?01[3-9]\d{2,8}[\d\s-]*/g, '')
+      .replace(/[০-৯0-9]{5,}/g, '')
+      .replace(/\s*[-–—:]\s*$/, '')
+      .trim();
+    return withoutPhone ? `${withoutPhone} (নম্বর গোপন)` : 'নিরাপত্তার স্বার্থে নম্বর গোপন রাখা হয়েছে';
+  };
+
+  // Buttons remain visually present without any links or external redirects
   const handleCopyPhone = () => {
-    navigator.clipboard.writeText(member.phone);
-    setCopiedPhone(true);
-    setTimeout(() => setCopiedPhone(false), 2000);
+    // No phone number copied on public site
   };
 
   const handleCall = () => {
-    window.location.href = `tel:${member.phone}`;
+    // Direct call link disabled as requested
   };
 
   const handleWhatsApp = () => {
-    const cleanNumber = member.phone.replace(/[^0-9]/g, '');
-    const intlNumber = cleanNumber.startsWith('0') ? '88' + cleanNumber : cleanNumber;
-    const msg = encodeURIComponent(
-      `আসসালামু আলাইকুম ${member.fullName} ভাই/আপু, আমি "ঢাকাস্থ ঝিনাইদহ জেলার মানুষ" গ্রুপ থেকে যোগাযোগ করছি।`
-    );
-    window.open(`https://wa.me/${intlNumber}?text=${msg}`, '_blank');
+    // Direct WhatsApp redirect disabled as requested
   };
 
   const handleOpenFacebook = () => {
-    if (!member.facebookProfile) {
-      setEditingFb(true);
-      return;
-    }
-    let url = member.facebookProfile.trim();
-    if (!url.startsWith('http://') && !url.startsWith('https://')) {
-      if (url.startsWith('facebook.com/') || url.startsWith('www.facebook.com/')) {
-        url = 'https://' + url;
-      } else {
-        url = `https://facebook.com/${url.replace('@', '')}`;
-      }
-    }
-    window.open(url, '_blank');
+    // Direct Facebook redirect disabled as requested
   };
 
   const handleSaveFacebook = () => {
@@ -270,8 +266,8 @@ export const MemberDetailsModal: React.FC<Props> = ({
                 </button>
               </div>
 
-              {/* Facebook Profile Edit Option */}
-              {editingFb ? (
+              {/* Facebook Profile Edit Option (Only visible to owner or admin) */}
+              {canViewPhone && editingFb ? (
                 <div className="p-3 bg-blue-50/80 border border-blue-200 rounded-2xl space-y-2">
                   <label className="block text-xs font-semibold text-blue-900">
                     ফেসবুক প্রোফাইল লিংক / ইউজারনেম সংরক্ষণ করুন:
@@ -298,22 +294,6 @@ export const MemberDetailsModal: React.FC<Props> = ({
                       বাতিল
                     </button>
                   </div>
-                </div>
-              ) : member.facebookProfile ? (
-                <div className="p-3 bg-blue-50/50 border border-blue-100 rounded-2xl flex items-center justify-between text-xs">
-                  <div className="flex items-center gap-2 text-blue-900">
-                    <span className="w-5 h-5 rounded-full bg-blue-600 text-white flex items-center justify-center text-xs font-bold">
-                      f
-                    </span>
-                    <span className="font-medium truncate max-w-xs">{member.facebookProfile}</span>
-                  </div>
-                  <button
-                    onClick={() => setEditingFb(true)}
-                    className="text-blue-700 hover:underline flex items-center gap-1 font-semibold cursor-pointer"
-                  >
-                    <Edit2 className="w-3 h-3" />
-                    <span>পরিবর্তন</span>
-                  </button>
                 </div>
               ) : null}
 
@@ -410,7 +390,7 @@ export const MemberDetailsModal: React.FC<Props> = ({
                     <AlertCircle className="w-3.5 h-3.5 text-amber-700" />
                     <span>জরুরি প্রয়োজনে যোগাযোগের তথ্য</span>
                   </h4>
-                  <p className="text-amber-800">{member.emergencyContact}</p>
+                  <p className="text-amber-800">{formatPublicEmergencyContact(member.emergencyContact)}</p>
                 </div>
               )}
 
